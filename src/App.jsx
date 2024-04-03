@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 const App = () => {
-  const data = ["Good", "Neutral", "Bad"];
+  const data = ["good", "neutral", "bad"];
 
   const [feedback, setFeedback] = useState(() => {
     const savedData = JSON.parse(window.localStorage.getItem("feedBackData"));
@@ -20,7 +20,12 @@ const App = () => {
     };
   });
 
+  useEffect(() => {
+    window.localStorage.setItem("feedBackData", JSON.stringify(feedback));
+  }, [feedback]);
+
   const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
+  console.log(totalFeedback);
   const positiveFeedback = Math.round((feedback.good / totalFeedback) * 100);
 
   const updateFeedback = (feedbackType) => {
@@ -29,19 +34,16 @@ const App = () => {
     //   ...prev,
     //   [feedbackType]: prev[feedbackType] + 1,
     // }));
-    if (feedbackType === "Good") {
+    if (feedbackType === "good") {
       setFeedback((prev) => ({ ...prev, good: prev.good + 1 }));
     }
-    if (feedbackType === "Neutral") {
+    if (feedbackType === "neutral") {
       setFeedback((prev) => ({ ...prev, neutral: prev.neutral + 1 }));
     }
-    if (feedbackType === "Bad") {
+    if (feedbackType === "bad") {
       setFeedback((prev) => ({ ...prev, bad: prev.bad + 1 }));
     }
   };
-  useEffect(() => {
-    window.localStorage.setItem("feedbackData", JSON.stringify(feedback));
-  }, [feedback]);
 
   const resetFeedback = () => {
     setFeedback({
@@ -54,13 +56,18 @@ const App = () => {
   return (
     <div className="container">
       <Description />
-      <Options data={data} updateFeedback={updateFeedback} />
-      {totalFeedback > 0 && <button onClick={resetFeedback}>Reset</button>}
+      <Options
+        data={data}
+        updateFeedback={updateFeedback}
+        resetFeedback={resetFeedback}
+        totalFeedback={totalFeedback}
+      />
+
       {totalFeedback ? (
         <Feedback
           feedback={feedback}
-          totalFeedback={totalFeedback}
           positiveFeedback={positiveFeedback}
+          totalFeedback={totalFeedback}
         />
       ) : (
         <Notification />

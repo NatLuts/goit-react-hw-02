@@ -1,5 +1,5 @@
 import s from "./Options.module.css";
-const Options = ({ data, updateFeedback }) => {
+const Options = ({ data, updateFeedback, totalFeedback, resetFeedback }) => {
   return (
     <div className={s.wrap}>
       {data.map((btn) => (
@@ -7,6 +7,7 @@ const Options = ({ data, updateFeedback }) => {
           {btn}
         </button>
       ))}
+      {totalFeedback > 0 && <button onClick={resetFeedback}>Reset</button>}
     </div>
   );
 };
